@@ -7,10 +7,10 @@ import jpholiday
 app = Flask(__name__)
 app.secret_key = "yashoya_secret_key_fixed" # セッション用の秘密鍵
 
-FIREBASE_URL = "https://izakaya-reserve-default-rtdb.firebaseio.com"
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "1234"
-ENTRANCE_PASSWORD = "yashoya" # サイト全体の合言葉
+FIREBASE_URL = os.environ.get("FIREBASE_URL", "https://izakaya-reserve-default-rtdb.firebaseio.com")
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "1234")
+ENTRANCE_PASSWORD = os.environ.get("ENTRANCE_PASSWORD", "1227") # 合言葉（Renderから変更可能）
 
 @app.before_request
 def check_entrance():
