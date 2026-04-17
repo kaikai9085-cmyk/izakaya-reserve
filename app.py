@@ -10,29 +10,6 @@ app.secret_key = "yashoya_secret_key_fixed" # セッション用の秘密鍵
 FIREBASE_URL = os.environ.get("FIREBASE_URL", "https://izakaya-reserve-default-rtdb.firebaseio.com")
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "1234")
-ENTRANCE_PASSWORD = os.environ.get("ENTRANCE_PASSWORD", "1227") # 合言葉（Renderから変更可能）
-
-@app.before_request
-def check_entrance():
-    # 静的ファイル、合言葉画面、合言葉送信処理は除外
-    if request.path.startswith('/static') or request.path == url_for('entrance') or request.path == '/entrance_check':
-        return
-    
-    if not session.get('authorized'):
-        return redirect(url_for('entrance'))
-
-@app.route("/entrance")
-def entrance():
-    return render_template("entrance.html")
-
-@app.route("/entrance_check", methods=["POST"])
-def entrance_check():
-    pw = request.form.get("password")
-    if pw == ENTRANCE_PASSWORD:
-        session['authorized'] = True
-        return redirect(url_for('index'))
-    return render_template("entrance.html", error="合言葉が違います")
-
 
 def is_sunday_or_holiday(date_obj):
     return date_obj.weekday() == 6 or jpholiday.is_holiday(date_obj)
