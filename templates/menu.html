@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お品書き - 八庄屋 大津和店</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page-bg">
+        <div class="reserve-card" style="max-width: 800px;">
+            <h1>お品書き</h1>
+            <p class="lead-text">八庄屋自慢の逸品をご賞味ください</p>
+
+            <div class="menu-grid">
+                {% for item in menu_items %}
+                <div class="menu-card">
+                    <div class="menu-image" style="background-image: url('{{ url_for('static', filename=item.image) }}');"></div>
+                    <div class="menu-info">
+                        <div class="menu-header">
+                            <h3 class="menu-name">{{ item.name }}</h3>
+                            <span class="menu-price">{{ item.price }}</span>
+                        </div>
+                        <p class="menu-desc">{{ item.desc }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div style="margin-top: 40px; display: flex; gap: 15px;">
+                <a href="/" class="reserve-btn" style="flex: 1; text-decoration: none; text-align: center;">予約する</a>
+                <a href="/" class="sub-btn" style="flex: 1;">トップページに戻る</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

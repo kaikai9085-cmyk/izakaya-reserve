@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八庄屋 予約管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="page-bg">
+        <div class="reserve-card">
+
+            <h1>予約管理</h1>
+            <p class="lead-text">現在の予約を確認・操作できます</p>
+
+            <!-- 検索フォーム -->
+            <input type="text" id="searchInput" placeholder="名前または日付で検索 (例: 山田, 2026-04-20)"
+                style="width: 100%; margin-bottom: 20px;">
+
+            {% if reservations %}
+            {% for date, items in reservations|groupby('date') %}
+            <h3 class="date-group-header" data-date="{{ date }}">
+                {{ date }} の予約</h3>
+            {% for r in items %}
+            <div class="admin-card" data-name="{{ r.name }}" data-date="{{ r.date }}">
+
+                <div class="admin-row"><span class="label">名前</span><span class="value">{{ r.name }}</span></div>
+                <div class="admin-row"><span class="label">電話番号</span><span class="value">{{ r.phone }}</span></div>
+                <div class="admin-row"><span class="label">人数</span><span class="value">{{ r.people }}人</span></div>
+                <div class="admin-row"><span class="label">日付</span><span class="value">{{ r.date }}</span></div>
+                <div class="admin-row"><span class="label">時間</span><span class="value">{{ r.time }}</span></div>
+                <div class="admin-row"><span class="label">コース</span><span class="value">{{ r.course }}</span></div>
+
+                <!-- 状態 -->
+                <div class="admin-row">
+                    <span class="label">状態</span>
+                    <span class="status-badge 
+                {% if r.status == '確定' %}status-ok
+                {% elif r.status == '保留' %}status-pending
+                {% elif r.status == '却下' %}status-ng
+                {% endif %}
+            ">
+                        {{ r.status }}
+                    </span>
+                </div>
+
+                <div class="action-buttons">
+                    <!-- 保留操作 -->
+                    {% if r.status == "保留" %}
+                    <form action="/approve/{{ r.id }}" method="POST" style="flex:1;">
+                        <button type="submit" class="approve-btn" style="width:100%;">確定</button>
+                    </form>
+                    <form action="/reject/{{ r.id }}" method="POST" style="flex:1;">
+                        <button type="submit" class="reject-btn" style="width:100%;">却下</button>
+                    </form>
+                    {% endif %}
+
+                    <!-- 削除 -->
+                    <form action="/delete/{{ r.id }}" method="POST" style="flex:1;">
+                        <button type="submit" class="delete-btn" style="width:100%;">削除</button>
+                    </form>
+                </div>
+
+            </div>
+            {% endfor %}
+            {% endfor %}
+            {% else %}
+            <div class="empty-box">予約がありません</div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const filter = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.admin-card');
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const date = card.getAttribute('data-date');
+
+                if (name.includes(filter) || date.includes(filter)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const headers = document.querySelectorAll('.date-group-header');
+            headers.forEach(header => {
+                const date = header.getAttribute('data-date');
+                const visibleCards = Array.from(cards).filter(card =>
+                    card.getAttribute('data-date') === date && card.style.display !== 'none'
+                );
+
+                if (visibleCards.length > 0) {
+                    header.style.display = '';
+                } else {
+                    header.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

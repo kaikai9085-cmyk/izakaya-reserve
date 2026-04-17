@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約確認・キャンセル - 八庄屋</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page-bg">
+        <div class="reserve-card">
+            <h1>予約確認・キャンセル</h1>
+            <p class="lead-text">ご予約時のお名前と電話番号を入力してください</p>
+
+            <!-- 検索フォーム -->
+            <form method="POST" class="reserve-form">
+                <div class="form-group">
+                    <label>お名前</label>
+                    <input type="text" name="name" placeholder="例：山田 太郎" value="{{ request.form.get('name', '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label>電話番号</label>
+                    <input type="text" name="phone" placeholder="例：09012345678" value="{{ request.form.get('phone', '') }}" required>
+                </div>
+                <button type="submit" class="reserve-btn">検索する</button>
+            </form>
+
+            <div style="margin-top: 30px;">
+                <a href="/" class="sub-btn">トップページに戻る</a>
+            </div>
+
+            <!-- 検索結果表示 -->
+            {% if request.method == "POST" %}
+                <div style="margin-top: 40px;">
+                    <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 5px;">検索結果</h3>
+                    
+                    {% if reservations %}
+                        {% for r in reservations %}
+                            <div class="info-box">
+                                <div class="info-row">
+                                    <span class="info-label">日付</span>
+                                    <span class="info-value">{{ r.date }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">時間</span>
+                                    <span class="info-value">{{ r.time }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">人数</span>
+                                    <span class="info-value">{{ r.people }} 名</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">コース</span>
+                                    <span class="info-value">{{ r.course }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">状態</span>
+                                    <span class="info-value">
+                                        {% if r.status == "確定" %}
+                                            <span style="color: var(--gold);">確定</span>
+                                        {% elif r.status == "保留" %}
+                                            <span style="color: #f57c00;">保留</span>
+                                        {% elif r.status == "却下" %}
+                                            <span style="color: var(--crimson);">却下</span>
+                                        {% else %}
+                                            {{ r.status }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                
+                                <!-- キャンセルボタン -->
+                                {% if r.date > today_str %}
+                                <form method="POST" action="/cancel/{{ r.id }}" style="margin-top: 20px;" onsubmit="return confirm('本当にこの予約をキャンセルしますか？\n※キャンセルは取り消せません');">
+                                    <button type="submit" class="reject-btn" style="width: 100%;">この予約をキャンセル</button>
+                                </form>
+                                {% else %}
+                                <p style="color: var(--crimson); font-weight: bold; margin-top: 15px; font-size: 14px; text-align: center;">
+                                    ※当日のキャンセルはお電話で直接ご連絡ください。
+                                </p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #c62828; font-weight: bold;">該当する予約が見つかりませんでした。</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合言葉の入力 - 八庄屋</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page-bg">
+        <div class="reserve-card" style="max-width: 400px; text-align: center;">
+            <h1 style="font-size: 32px; margin-bottom: 20px;">合言葉</h1>
+            <p style="margin-bottom: 30px; color: var(--text-muted); font-weight: bold;">
+                サイトを閲覧するには<br>合言葉を入力してください。
+            </p>
+
+            {% if error %}
+            <div class="error-box" style="margin-bottom: 20px;">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="/entrance_check" method="POST" class="reserve-form">
+                <div class="form-group">
+                    <input type="text" name="password" placeholder="合言葉を入力" required 
+                        style="text-align: center; font-size: 20px; letter-spacing: 4px;">
+                </div>
+                <button type="submit" class="reserve-btn">店に入る</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

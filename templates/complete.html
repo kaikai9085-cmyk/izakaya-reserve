@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約完了 - 八庄屋</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page-bg">
+        <div class="reserve-card">
+            <h1>ご予約ありがとうございます</h1>
+            <p class="lead-text">以下の内容で予約の申し込みを受け付けました。</p>
+            
+            <div class="info-box">
+                <div class="info-row">
+                    <span class="info-label">お名前</span>
+                    <span class="info-value">{{ data.name }} 様</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">日付</span>
+                    <span class="info-value">{{ data.date }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">時間</span>
+                    <span class="info-value">{{ data.time }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">人数</span>
+                    <span class="info-value">{{ data.people }} 名</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">コース</span>
+                    <span class="info-value">{{ data.course }}</span>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 14px; color: var(--gold); font-weight: bold; text-align: center;">
+                ※現在のステータスは「{{ data.status }}」です。<br>お店からの確定をお待ちください。
+            </p>
+
+            <div style="margin-top: 30px;">
+                <a href="/" class="reserve-btn" style="display: block; text-align: center; text-decoration: none;">トップページに戻る</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

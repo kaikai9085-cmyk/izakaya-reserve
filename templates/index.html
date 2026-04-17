@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八庄屋 予約ページ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page-bg">
+        <div class="reserve-card">
+            <h1>八庄屋</h1>
+            <p class="lead-text">ご希望の日時とコースを選んでご予約ください</p>
+
+            <div style="margin-bottom: 30px;">
+                <a href="/menu" class="sub-btn" style="background: var(--navy-dim); border-color: var(--navy-main); color: var(--navy-main); font-size: 16px; padding: 16px;">
+                    🏮 お料理メニューを見る
+                </a>
+            </div>
+
+            {% if error_msg %}
+            <div class="error-box">
+                {{ error_msg }}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="reserve-form">
+                <div class="form-group">
+                    <label>お名前</label>
+                    <input type="text" name="name" placeholder="例：山田 太郎" required>
+                </div>
+
+                <div class="form-group">
+                    <label>電話番号</label>
+                    <input type="text" name="phone" placeholder="例：09012345678" required>
+                </div>
+
+                <div class="form-group">
+                    <label>人数</label>
+                    <input type="number" name="people" min="1" placeholder="例：4" required>
+                </div>
+
+                <div class="form-group">
+                    <label>日付</label>
+                    <input type="date" name="date" min="{{ today_str }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>時間</label>
+                    <select name="time" required>
+                        <option value="">時間を選択してください</option>
+                        {% for t in time_options %}
+                            <option value="{{ t }}">{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>コースを選択</label>
+
+                    <div class="options-grid">
+                        <label class="radio-label">
+                            <input type="radio" name="course" value="席のみ" required>
+                            <span class="radio-card">
+                                <span style="display:block; font-weight:bold; margin-bottom:4px; font-family:var(--font-heading);">席のみ</span>
+                                <span style="font-size:13px; opacity:0.8;">当日メニューから自由に注文</span>
+                            </span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="course" value="食べ飲み放題" required>
+                            <span class="radio-card">
+                                <span style="display:block; font-weight:bold; margin-bottom:4px; font-family:var(--font-heading);">食べ飲み放題</span>
+                                <span style="font-size:13px; opacity:0.8;">人気の定番コース</span>
+                            </span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="course" value="食べ飲み放題プレミアム" required>
+                            <span class="radio-card">
+                                <span style="display:block; font-weight:bold; margin-bottom:4px; font-family:var(--font-heading);">食べ飲み放題プレミアム</span>
+                                <span style="font-size:13px; opacity:0.8;">ワンランク上のコース</span>
+                            </span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="course" value="飲み放題付き鍋コース" required>
+                            <span class="radio-card">
+                                <span style="display:block; font-weight:bold; margin-bottom:4px; font-family:var(--font-heading);">鍋コース</span>
+                                <span style="font-size:13px; opacity:0.8;">飲み放題付きでしっかり満足</span>
+                            </span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="course" value="飲み放題付き串カツコース" required>
+                            <span class="radio-card">
+                                <span style="display:block; font-weight:bold; margin-bottom:4px; font-family:var(--font-heading);">串カツコース</span>
+                                <span style="font-size:13px; opacity:0.8;">串カツを楽しめる人気コース</span>
+                            </span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="course" value="飲み放題" required>
+                            <span class="radio-card">
+                                <span style="display:block; font-weight:bold; margin-bottom:4px; font-family:var(--font-heading);">単品飲み放題</span>
+                                <span style="font-size:13px; opacity:0.8;">お酒中心で楽しみたい方向け</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="reserve-btn">予約する</button>
+            </form>
+
+            <a href="/check" class="sub-btn" style="margin-top:20px;">予約確認はこちら</a>
+
+            <!-- Googleマップセクション -->
+            <div style="margin-top: 50px; border-top: 2px dashed var(--border-color); padding-top: 30px;">
+                <h2 style="font-family: var(--font-heading); color: var(--navy-main); font-size: 24px; margin-bottom: 15px; text-align: center;">お店の場所</h2>
+                <p style="font-size: 14px; color: var(--text-muted); text-align: center; margin-bottom: 15px;">
+                    兵庫県神戸市西区大津和1-3-5<br>
+                    伊川谷インター近く
+                </p>
+                <div class="map-container">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=八庄屋%20大津和店&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                        width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
